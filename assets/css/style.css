@@ -17,3 +17,11 @@ nav > h1 > a:hover {
     color: rgb(235, 219, 235, 1);
     filter: drop-shadow(6px 2px 4px grey);
 }
+
+.row {
+    margin-top: 9px;
+}
+
+h4 {
+    font-size: 2vh;
+}

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0 , shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link href="https://pagecdn.io/lib/open-iconic/1.1.1/css/open-iconic-bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/style.css" />
     <title>Weather 2000</title>
 </head>
@@ -16,20 +17,85 @@
     </nav>
     <div class="container">
         <div class="row">
-            <div class="col-sm">
+            <div class="col-sm-4">
                 <div class="col-sm">
-                    search form
+                    <label for="city-search">
+                        <h4>Search for a City:</h4>
+                    </label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="City" aria-label="City Search"
+                            aria-describedby="basic-addon2" id="city-search">
+                        <button class="btn btn-primary" type="button">
+                            <span class="oi oi-magnifying-glass" title="magnifying glass" aria-hidden="true"></span>
+                        </button>
+                    </div>
                 </div>
                 <div class="col-lg">
-                    list of past searches
+                    <ul class="list-group">
+                        <li class="list-group-item">Cras justo odio</li>
+                        <li class="list-group-item">Dapibus ac facilisis in</li>
+                        <li class="list-group-item">Morbi leo risus</li>
+                        <li class="list-group-item">Porta ac consectetur ac</li>
+                        <li class="list-group-item">Vestibulum at eros</li>
+                    </ul>
                 </div>
             </div>
             <div class="col-lg">
                 <div class="col-lg">
-                    City Card
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                                of the card's content.</p>
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg">
-                    5 day forcast
+                    <div class="card-deck">
+                        <div class="card">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
+                      </div>
                 </div>
             </div>
         </div>
