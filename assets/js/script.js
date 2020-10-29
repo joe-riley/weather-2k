@@ -5,6 +5,7 @@ let weatherData = (cityName) => {
         .then(response => {
             if (response.ok) {
                 response.json().then(function (data) {
+                    // create the elements with the data
                     console.log(data);
                 });
             } else {
@@ -19,6 +20,9 @@ let weatherData = (cityName) => {
 weatherData('asldkfj');
 
 // create city card
+const create_card = (cityName, currentTemperature, currentHumidity, currentWindSpeed, currentUvIndex) => {
+
+}
 
 // create 5 day forcast
 
@@ -27,6 +31,5 @@ weatherData('asldkfj');
 let citySearch = (event) => {
     var searchInput = document.getElementById("city-search").value;
     // check for empty and set validation error
-
 
 };
