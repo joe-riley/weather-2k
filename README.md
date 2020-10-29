@@ -1,4 +1,8 @@
-# weather-2k
+# Weather 2000
+It has come from the futah to tell us it's past... weather. It does not promise to always be correct because it was damaged from the portal that brought it here. 
+
+## Check it
+[Weather 2000](https://joe-riley.github.io/weather-2k)
 
 # User Story
 * AS A traveler
