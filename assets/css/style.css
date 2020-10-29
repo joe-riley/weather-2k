@@ -1,0 +1,19 @@
+
+nav > h1 {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+nav > h1 > a {
+    text-decoration: none;
+    color: whitesmoke;
+    display: flex;
+    flex-wrap: nowrap;
+    min-width: 20%;
+}
+
+nav > h1 > a:hover {
+    text-decoration: none;
+    color: rgb(235, 219, 235, 1);
+    filter: drop-shadow(6px 2px 4px grey);
+}
