@@ -3,22 +3,48 @@ var baseUrl = 'https://api.openweathermap.org/data'
 var endpointVersion = 2.5
 var currentWeather = 'weather?q='
 var currentFiveDayForcast = 'forecast?q='
+var units = 'imperial'
 
 let weatherData = (cityName, endpoint) => {
-    fetch(`${baseUrl}/${endpointVersion}/${endpoint}${cityName}&appid=${apiKey}`)
+     fetch(`${baseUrl}/${endpointVersion}/${endpoint}${cityName}&appid=${apiKey}&units=${units}`)
         .then(response => {
             if (response.ok) {
-                response.json().then(function (data) {
+                response.json().then(weatherCallData => {
+
+                    // First we need to make another call for uv data using lat and lon
+                    let uVIndex = async () => { 
+                        await fetch(`${baseUrl}/${endpointVersion}/uvi?lat=${weatherCallData.coord.lat}&lon=${weatherCallData.coord.lon}&appid=${apiKey}`)
+                            .then(uVResponse => {
+                                if (uVResponse.ok) {
+                                    uVResponse.json()
+                                        .then((uVCallData) => {
+                                            console.log(uVCallData);
+                                            return uVCallData;
+                                        })
+                                } else {
+
+                                }
+                            })
+                            .catch(function (error) {
+                                console.warn(`Unable to connect to fetch from UV:\n${error}`)
+                            })
+                    }
+
                     // create the elements with the data
-                    console.log(data);
-                    createCard('Burbank', 10, 20, 30, 40);
+                    createCard(
+                        weatherCallData.name,
+                        weatherCallData.main.temp,
+                        weatherCallData.main.humidity,
+                        weatherCallData.wind.speed,
+                        uVIndex().value,
+                    );
                 });
             } else {
                 // set error message
             }
         })
         .catch(function (error) {
-            console.warn(`Unable to connect to Open Weather:\n${error}`);
+            console.warn(`Unable to connect to fetch current weather:\n${error}`);
         });
 }
 
