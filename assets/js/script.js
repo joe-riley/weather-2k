@@ -1,12 +1,17 @@
-var api_key = '9217f1ef2659514ded2247d6d5bfb3dc'
+var apiKey = '9217f1ef2659514ded2247d6d5bfb3dc'
+var baseUrl = 'https://api.openweathermap.org/data'
+var endpointVersion = 2.5
+var currentWeather = 'weather?q='
+var currentFiveDayForcast = 'forecast?q='
 
-let weatherData = (cityName) => {
-    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${api_key}`)
+let weatherData = (cityName, endpoint) => {
+    fetch(`${baseUrl}/${endpointVersion}/${endpoint}${cityName}&appid=${apiKey}`)
         .then(response => {
             if (response.ok) {
                 response.json().then(function (data) {
                     // create the elements with the data
                     console.log(data);
+                    createCard('Burbank', 10, 20, 30, 40);
                 });
             } else {
                 // set error message
@@ -17,11 +22,68 @@ let weatherData = (cityName) => {
         });
 }
 
-weatherData('asldkfj');
+const createTempSpan = (num) => {
+    let temp = document.createElement('span')
+    temp.innerText = `${num}°`;
+    return temp;
+}
 
-// create city card
-const create_card = (cityName, currentTemperature, currentHumidity, currentWindSpeed, currentUvIndex) => {
+const createCloudSpan = () => {
+    return document.createElement('span')
+        .setAttribute('class', 'oi oi-cloud');
+}
 
+const createHumiditySpan = (num) => {
+    let humidity = document.createElement('span');
+    humidity.textContent = `${num}%`;
+    return humidity;
+}
+
+const createWindSpeedSpan = (num) => {
+    let windSpeed = document.createElement('span');
+    windSpeed.textContent = `${num} MPH`;
+    return windSpeed;
+}
+
+const createUvIndexSpan = (num) => {
+    let uVIndex = document.createElement('span');
+    uVIndex.innerText = num;
+    return uVIndex;
+}
+
+// create city card - split some of the elements used in other areas as utility functions.
+const createCard = (cityName, currentTemperature, currentHumidity, currentWindSpeed, currentUvIndex) => {
+    let parentContainer = document.getElementById('cardBody');
+    let city = document.createElement('h3');
+        city.setAttribute('class', 'card-title');;
+        city.setAttribute('id', 'cityName');
+        city.innerText = cityName;
+    let temperature = document.createElement('h6');
+        temperature.setAttribute('class', 'card-subtitle mb-2 text-muted');
+        temperature.setAttribute('id', 'currentTemperature');
+        temperature.innerText = 'Temperature: ';
+        temperature.append(createTempSpan(currentTemperature));
+    let humidity = document.createElement('h6');
+        humidity.setAttribute('class', 'card-subtitle mb-2 text-muted');
+        humidity.setAttribute('id', 'currentHumidity');
+        humidity.innerText = 'Humidity: ';
+        humidity.append(createHumiditySpan(currentHumidity));
+    let windSpeed = document.createElement('h6');
+        windSpeed.setAttribute('class', 'card-subtitle mb-2 text-muted');
+        windSpeed.setAttribute('id', 'currentWindSpeed');
+        windSpeed.innerText = 'Wind Speed: ';
+        windSpeed.append(createWindSpeedSpan(currentWindSpeed));
+    let uVIndex = document.createElement('h6');
+        uVIndex.setAttribute('class', 'card-subtitle mb-2 text-muted');
+        uVIndex.setAttribute('id', 'currentUvIndex');
+        uVIndex.innerText = 'UV Index: ';
+        uVIndex.append(createUvIndexSpan(currentUvIndex));
+    
+    parentContainer.append(city);
+    parentContainer.append(temperature)
+    parentContainer.append(humidity)
+    parentContainer.append(windSpeed)
+    parentContainer.append(uVIndex);
 }
 
 // create 5 day forcast
@@ -31,5 +93,9 @@ const create_card = (cityName, currentTemperature, currentHumidity, currentWindS
 let citySearch = (event) => {
     var searchInput = document.getElementById("city-search").value;
     // check for empty and set validation error
+    if (searchInput) {
+        weatherData(searchInput, currentWeather);
+        //weatherData(searchInput, currentFiveDayForcast);
+    }
 
 };
