@@ -22,6 +22,7 @@ let weatherData = (cityName) => {
         .then(() => {
             clearCard();
             createCard(
+                moment(weather.date).format('M/D/YYYY'),
                 weather.name,
                 weather.main.temp,
                 weather.main.humidity,
@@ -87,12 +88,12 @@ const clearCard = () => {
 }
 
 // create city card - split some of the elements used in other areas as utility functions.
-const createCard = (cityName, currentTemperature, currentHumidity, currentWindSpeed, currentUvIndex) => {
+const createCard = (date, cityName, currentTemperature, currentHumidity, currentWindSpeed, currentUvIndex) => {
     let parentContainer = document.getElementById('cardBody');
     let city = document.createElement('h3');
         city.setAttribute('class', 'card-title');;
         city.setAttribute('id', 'cityName');
-        city.innerText = cityName;
+        city.innerText = `${cityName} ${date}`;
     let temperature = document.createElement('h6');
         temperature.setAttribute('class', 'card-subtitle mb-2 text-muted');
         temperature.setAttribute('id', 'currentTemperature');
