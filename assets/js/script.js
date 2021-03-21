@@ -19,6 +19,7 @@ let weatherData = (cityName, endpoint) => {
             console.log(uv);
         })
         .then(() => {
+            clearCard();
             createCard(
                 weather.name,
                 weather.main.temp,
@@ -26,6 +27,7 @@ let weatherData = (cityName, endpoint) => {
                 weather.wind.speed,
                 uv.value,
             );
+            addCityToList(weather.name);
         })
     })
 };
@@ -57,6 +59,11 @@ const createUvIndexSpan = (num) => {
     let uVIndex = document.createElement('span');
     uVIndex.innerText = num;
     return uVIndex;
+}
+
+const clearCard = () => {
+    let parentContainer = document.getElementById('cardBody');
+    parentContainer.innerHTML = '';
 }
 
 // create city card - split some of the elements used in other areas as utility functions.
@@ -107,3 +114,12 @@ let citySearch = (event) => {
     }
 
 };
+
+// Add city to list
+let addCityToList = (city) => {
+    const citiesSearchedUl = document.querySelector('#cities-searched');
+    const listEl = document.createElement('li');
+    listEl.classList.add('list-group-item');
+    listEl.textContent = city;
+    citiesSearchedUl.appendChild(listEl);
+}
