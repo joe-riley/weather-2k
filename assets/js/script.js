@@ -4,10 +4,11 @@ const endpointVersion = 2.5
 const currentWeather = 'weather?q='
 const currentFiveDayForcast = 'forecast?q='
 const units = 'imperial'
+const today = new Date();
 
-let weatherData = (cityName, endpoint) => {
+let weatherData = (cityName) => {
     let weather, uv;
-    fetch(`${baseUrl}/${endpointVersion}/${endpoint}${cityName}&appid=${apiKey}&units=${units}`)
+    fetch(`${baseUrl}/${endpointVersion}/weather?q=${cityName}&appid=${apiKey}&units=${units}`)
     .then(response => response.json())
     .then(weatherCallData => {
         weather = weatherCallData
@@ -30,7 +31,26 @@ let weatherData = (cityName, endpoint) => {
             addCityToList(weather.name);
         })
     })
+
+    // Get 5 day forcast
+    fetch(`${baseUrl}/${endpointVersion}/forecast?q=${cityName}&appid=${apiKey}&units=${units}`)
+    .then(response => response.json())
+    .then(weatherCallData => {
+        console.log(weatherCallData);
+        weatherCallData.list.forEach(dateTime => {
+            if(dateTime.dt_txt.match(/.* 00:00:00/) ) {
+                createForecastDay(
+                    moment(dateTime.dt_txt).format('M/D/YYYY'),
+                    dateTime.main.temp,
+                    dateTime.main.humidity
+
+                )
+            }
+
+        });
+    })
 };
+
 
 const createTempSpan = (num) => {
     let temp = document.createElement('span')
@@ -101,15 +121,41 @@ const createCard = (cityName, currentTemperature, currentHumidity, currentWindSp
     parentContainer.append(uVIndex);
 }
 
-// create 5 day forcast
+const createForecastDay = (date, temp, humidity, image) => {
+    const forcastSection = document.querySelector('#fiveDayForcast');
 
+    const card = document.createElement('div');
+    card.classList.add('card');
+    
+    const cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
+
+    const heading = document.createElement('h5');
+    heading.classList.add('card-title');
+    heading.textContent = date.split(' ')[0];
+
+    const tempText = document.createElement('p');
+    tempText.classList.add('card-text');
+    tempText.textContent = `Temp: ${temp}`;
+
+    const humidityText = document.createElement('p');
+    tempText.classList.add('card-text');
+    humidityText.textContent = `Humidity: ${humidity}`;
+
+    card.append(cardBody);
+    cardBody.append(heading);
+    cardBody.append(tempText);
+    cardBody.append(humidityText);
+    forcastSection.append(card);
+
+}
 
 // Save button event
 let citySearch = (event) => {
     var searchInput = document.getElementById("city-search").value;
     // check for empty and set validation error
     if (searchInput) {
-        weatherData(searchInput, currentWeather);
+        weatherData(searchInput);
         //weatherData(searchInput, currentFiveDayForcast);
     }
 
