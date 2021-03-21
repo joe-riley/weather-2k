@@ -24,6 +24,7 @@ let weatherData = (cityName) => {
             createCard(
                 moment(weather.date).format('M/D/YYYY'),
                 weather.name,
+                weather.weather[0].icon,
                 weather.main.temp,
                 weather.main.humidity,
                 weather.wind.speed,
@@ -38,13 +39,14 @@ let weatherData = (cityName) => {
     .then(response => response.json())
     .then(weatherCallData => {
         console.log(weatherCallData);
+        clearForecastDays();
         weatherCallData.list.forEach(dateTime => {
             if(dateTime.dt_txt.match(/.* 00:00:00/) ) {
                 createForecastDay(
                     moment(dateTime.dt_txt).format('M/D/YYYY'),
                     dateTime.main.temp,
-                    dateTime.main.humidity
-
+                    dateTime.main.humidity,
+                    dateTime.weather[0].icon
                 )
             }
 
@@ -59,9 +61,10 @@ const createTempSpan = (num) => {
     return temp;
 }
 
-const createCloudSpan = () => {
-    return document.createElement('span')
-        .setAttribute('class', 'oi oi-cloud');
+const createCloudSpan = (iconId) => {
+    let icon = document.createElement('img');
+    icon.setAttribute('src', `http://openweathermap.org/img/wn/${iconId}@2x.png`);
+    return icon;
 }
 
 const createHumiditySpan = (num) => {
@@ -77,8 +80,20 @@ const createWindSpeedSpan = (num) => {
 }
 
 const createUvIndexSpan = (num) => {
+    let severityColor = 'green';
+        
+    if (num > 2 && num < 6) {
+        severityColor = 'yellow';
+    } else if (num >= 6 && num < 8) {
+        severityColor = 'orange';
+    } else if (num >= 8 && num < 10) {
+        severityColor = 'pink';
+    } else if (num >= 11) {
+        severityColor = 'purple';
+    }
     let uVIndex = document.createElement('span');
     uVIndex.innerText = num;
+    uVIndex.style.backgroundColor = severityColor;
     return uVIndex;
 }
 
@@ -88,12 +103,13 @@ const clearCard = () => {
 }
 
 // create city card - split some of the elements used in other areas as utility functions.
-const createCard = (date, cityName, currentTemperature, currentHumidity, currentWindSpeed, currentUvIndex) => {
+const createCard = (date, cityName, icon, currentTemperature, currentHumidity, currentWindSpeed, currentUvIndex) => {
     let parentContainer = document.getElementById('cardBody');
     let city = document.createElement('h3');
         city.setAttribute('class', 'card-title');;
         city.setAttribute('id', 'cityName');
-        city.innerText = `${cityName} ${date}`;
+        city.innerHTML = `${cityName} ${date}`;
+    let dayIcon = createCloudSpan(icon);
     let temperature = document.createElement('h6');
         temperature.setAttribute('class', 'card-subtitle mb-2 text-muted');
         temperature.setAttribute('id', 'currentTemperature');
@@ -116,19 +132,28 @@ const createCard = (date, cityName, currentTemperature, currentHumidity, current
         uVIndex.append(createUvIndexSpan(currentUvIndex));
     
     parentContainer.append(city);
-    parentContainer.append(temperature)
-    parentContainer.append(humidity)
-    parentContainer.append(windSpeed)
+    parentContainer.append(dayIcon);
+    parentContainer.append(temperature);
+    parentContainer.append(humidity);
+    parentContainer.append(windSpeed);
     parentContainer.append(uVIndex);
 }
 
-const createForecastDay = (date, temp, humidity, image) => {
-    const forcastSection = document.querySelector('#fiveDayForcast');
+const clearForecastDays = () => {
+    const forecastDaysContainer = document.querySelector('#fiveDayForecast');
+    forecastDaysContainer.innerHTML = '';
+}
+
+const createForecastDay = (date, temp, humidity, iconId) => {
+    const forecastSection = document.querySelector('#fiveDayForecast');
 
     const card = document.createElement('div');
+    card.style.backgroundImage = `url('http://openweathermap.org/img/wn/${iconId}@2x.png')`
+    card.style.backgroundSize = '100%';
     card.classList.add('card');
     
     const cardBody = document.createElement('div');
+    // cardBody.style.backgroundSize = '100%';
     cardBody.classList.add('card-body');
 
     const heading = document.createElement('h5');
@@ -147,17 +172,17 @@ const createForecastDay = (date, temp, humidity, image) => {
     cardBody.append(heading);
     cardBody.append(tempText);
     cardBody.append(humidityText);
-    forcastSection.append(card);
+    forecastSection.append(card);
 
 }
 
 // Save button event
-let citySearch = (event) => {
-    var searchInput = document.getElementById("city-search").value;
-    // check for empty and set validation error
+let citySearch = () => {
+    const searchInput = document.querySelector("#city-search");
     if (searchInput) {
-        weatherData(searchInput);
-        //weatherData(searchInput, currentFiveDayForcast);
+        weatherData(searchInput.value);
+        searchInput.value = '';
+
     }
 
 };
@@ -165,8 +190,16 @@ let citySearch = (event) => {
 // Add city to list
 let addCityToList = (city) => {
     const citiesSearchedUl = document.querySelector('#cities-searched');
+    const citiesEls = document.querySelectorAll('#cities-searched > li')
+    console.log(citiesEls);
+    citiesEls.forEach(cityEl => {
+        if (city === cityEl.textContent) {
+            cityEl.remove();
+        }
+    })
     const listEl = document.createElement('li');
     listEl.classList.add('list-group-item');
     listEl.textContent = city;
+    listEl.addEventListener('click', () => weatherData(city));
     citiesSearchedUl.appendChild(listEl);
 }
