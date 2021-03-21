@@ -1,52 +1,34 @@
-var apiKey = '9217f1ef2659514ded2247d6d5bfb3dc'
-var baseUrl = 'https://api.openweathermap.org/data'
-var endpointVersion = 2.5
-var currentWeather = 'weather?q='
-var currentFiveDayForcast = 'forecast?q='
-var units = 'imperial'
+const apiKey = '9217f1ef2659514ded2247d6d5bfb3dc'
+const baseUrl = 'https://api.openweathermap.org/data'
+const endpointVersion = 2.5
+const currentWeather = 'weather?q='
+const currentFiveDayForcast = 'forecast?q='
+const units = 'imperial'
 
 let weatherData = (cityName, endpoint) => {
-     fetch(`${baseUrl}/${endpointVersion}/${endpoint}${cityName}&appid=${apiKey}&units=${units}`)
-        .then(response => {
-            if (response.ok) {
-                response.json().then(weatherCallData => {
-
-                    // First we need to make another call for uv data using lat and lon
-                    let uVIndex = async () => { 
-                        await fetch(`${baseUrl}/${endpointVersion}/uvi?lat=${weatherCallData.coord.lat}&lon=${weatherCallData.coord.lon}&appid=${apiKey}`)
-                            .then(uVResponse => {
-                                if (uVResponse.ok) {
-                                    uVResponse.json()
-                                        .then((uVCallData) => {
-                                            console.log(uVCallData);
-                                            return uVCallData;
-                                        })
-                                } else {
-
-                                }
-                            })
-                            .catch(function (error) {
-                                console.warn(`Unable to connect to fetch from UV:\n${error}`)
-                            })
-                    }
-
-                    // create the elements with the data
-                    createCard(
-                        weatherCallData.name,
-                        weatherCallData.main.temp,
-                        weatherCallData.main.humidity,
-                        weatherCallData.wind.speed,
-                        uVIndex().value,
-                    );
-                });
-            } else {
-                // set error message
-            }
+    let weather, uv;
+    fetch(`${baseUrl}/${endpointVersion}/${endpoint}${cityName}&appid=${apiKey}&units=${units}`)
+    .then(response => response.json())
+    .then(weatherCallData => {
+        weather = weatherCallData
+        console.log(weather);
+        fetch(`${baseUrl}/${endpointVersion}/uvi?lat=${weatherCallData.coord.lat}&lon=${weatherCallData.coord.lon}&appid=${apiKey}`)
+        .then(uVResponse => uVResponse.json())
+        .then((uVCallData) => {
+            uv = uVCallData;
+            console.log(uv);
         })
-        .catch(function (error) {
-            console.warn(`Unable to connect to fetch current weather:\n${error}`);
-        });
-}
+        .then(() => {
+            createCard(
+                weather.name,
+                weather.main.temp,
+                weather.main.humidity,
+                weather.wind.speed,
+                uv.value,
+            );
+        })
+    })
+};
 
 const createTempSpan = (num) => {
     let temp = document.createElement('span')
